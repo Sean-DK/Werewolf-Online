@@ -25,6 +25,7 @@
         :class="{selected: extra.isSelected, dead: extra.isDead}"
       />
     </div>
+    <div class="timer" v-if="remainingTime > 0">{{ remainingTime }}</div>
     <div class="msg">{{ message }}</div>
     <br>
     <button v-if="allowSelection" v-on:click="submitAction" :disabled="selectedPlayers.length != maxSelections">Submit</button>
@@ -54,7 +55,9 @@ export default {
       narratorAudio: Audio,
       allowSelection: false,
       maxSelections: 0,
+      remainingTime: 0,
       checkTurnInterval: Number,
+      turnCountdownInterval: Number,
       voteTurnTimeout: Number,
       message: String,
       selectMode: "Any" // Any, Player, Extra
@@ -187,7 +190,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Werewolves wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 15000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execWerewolf();
               }
@@ -196,6 +199,7 @@ export default {
                 console.log("Skipping werewolves");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -215,6 +219,7 @@ export default {
                 console.log("Skipping minion");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -234,6 +239,7 @@ export default {
                 console.log("Skipping masons");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -244,7 +250,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Seer wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 15000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execSeer();
               }
@@ -253,6 +259,7 @@ export default {
                 console.log("Skipping seer");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -263,7 +270,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Robber wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 15000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execRobber();
               }
@@ -272,6 +279,7 @@ export default {
                 console.log("Skipping robber");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -282,15 +290,16 @@ export default {
                 // If role is active, execute turn script
                 console.log("Troublemaker wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 15000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execTroublemaker();
               }
               else {
                 // If role is not active, skip
-                console.log("Skipping minion");
+                console.log("Skipping troublemaker");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -301,7 +310,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Drunk wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 15000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execDrunk();
               }
@@ -310,6 +319,7 @@ export default {
                 console.log("Skipping drunk");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -329,6 +339,7 @@ export default {
                 console.log("Skipping insomniac");
                 if (this.isHost) {
                   this.nextTurn();
+                  this.checkCurrentTurn();
                 }
               }
             break;
@@ -341,6 +352,9 @@ export default {
               break;
             case "Voting":
               console.log("Vote!");
+              if (this.isHost) {
+                this.voteTurnTimeout = setTimeout(this.nextTurn, 30000);
+              }
               this.execVoting();
               break;
             case "Results":
@@ -370,7 +384,8 @@ export default {
       }
       if (this.selfRole === "Werewolf" && !this.hasAwoken) {
         this.wakeUp();
-        await this.sleep(3000);
+        await this.sleep(2000);
+        this.startTurnTimer(10);
         // Check for other werewolves
         await this.axios.get("https://werewolf-functions.azurewebsites.net/api/Werewolves?playerGuid=" + this.$store.state.Player.GUID)
         .then(response => {
@@ -399,13 +414,15 @@ export default {
         this.goToSleep();
       }
     },
-    execMinion: function() {
+    execMinion: async function() {
       if (!this.narrMuted) {
         this.narratorAudio = new Audio(require("@/assets/Audio/minion.mp3"));
         this.narratorAudio.play();
       }
       if (this.selfRole === "Minion" && !this.hasAwoken) {
         this.wakeUp();
+        await this.sleep(2000);
+        this.startTurnTimer(3);
         // Check for werewolves
         this.axios.get("https://werewolf-functions.azurewebsites.net/api/Werewolves?playerGuid=" + this.$store.state.Player.GUID)
         .then(response => {
@@ -421,13 +438,15 @@ export default {
         this.goToSleep();
       }
     },
-    execMason: function() {
+    execMason: async function() {
       if (!this.narrMuted) {
         this.narratorAudio = new Audio(require("@/assets/Audio/mason.mp3"));
         this.narratorAudio.play();
       }
       if (this.selfRole === "Mason" && !this.hasAwoken) {
         this.wakeUp();
+        await this.sleep(2000);
+        this.startTurnTimer(3);
         this.axios.get("https://werewolf-functions.azurewebsites.net/api/Masons?playerGuid=" + this.$store.state.Player.GUID)
         .then(response => {
           this.players = response.data;
@@ -450,6 +469,8 @@ export default {
       if (this.selfRole === "Seer" && !this.hasAwoken) {
         this.message = "Select 1 player or 2 extras and view their card";
         this.wakeUp();
+        // Give the seer 12 seconds since 2 seconds will be taken up by the wakeUp() animation
+        this.startTurnTimer(12);
         // Pick a card
         // Additional logic in this.select() for allowing a Seer to view 2 Extra cards
         this.allowSelection = true;
@@ -474,6 +495,8 @@ export default {
       if (this.selfRole === "Robber" && !this.hasAwoken) {
         this.message = "Select a player to swap cards with";
         this.wakeUp();
+        // Give the robber 12 seconds since 2 seconds will be taken up by the wakeUp() animation
+        this.startTurnTimer(12);
         // Select a player and swap your cards
         this.allowSelection = true;
         this.maxSelections = 1;
@@ -497,6 +520,8 @@ export default {
       if (this.selfRole === "Troublemaker" && !this.hasAwoken) {
         this.message = "Select 2 players and swap their cards";
         this.wakeUp();
+        // Give the troublemaker 12 seconds since 2 seconds will be taken up by the wakeUp() animation
+        this.startTurnTimer(12);
         // Select two cards and swap them
         this.allowSelection = true;
         this.maxSelections = 2;
@@ -520,6 +545,8 @@ export default {
       if (this.selfRole === "Drunk" && !this.hasAwoken) {
         this.message = "Swap your card with an extra, do not look at your new card";
         this.wakeUp();
+        // Give the drunk 12 seconds since 2 seconds will be taken up by the wakeUp() animation
+        this.startTurnTimer(12);
         // Swap with one of the extra cards
         this.allowSelection = true;
         this.maxSelections = 1;
@@ -535,13 +562,15 @@ export default {
         this.goToSleep();
       }
     },
-    execInsomniac: function() {
+    execInsomniac: async function() {
       if (!this.narrMuted) {
         this.narratorAudio = new Audio(require("@/assets/Audio/insomniac.mp3"));
         this.narratorAudio.play();
       }
       if (this.selfRole === "Insomniac" && !this.hasAwoken) {
         this.wakeUp();
+        await this.sleep(2000);
+        this.startTurnTimer(3);
         // Check role with server
         this.axios.get("https://werewolf-functions.azurewebsites.net/api/PlayerList?playerGuid=" + this.$store.state.Player.GUID)
         .then(response => {
@@ -568,6 +597,7 @@ export default {
         this.narratorAudio = new Audio(require("@/assets/Audio/wake.mp3"));
         this.narratorAudio.play();
       }
+      this.startTurnTimer(180);
       this.allowSelection = false;
       this.maxSelections = 0;
       this.selectMode = "Any";
@@ -579,6 +609,7 @@ export default {
     },
     execVoting: function() {
       // Select a player and confirm vote
+      this.startTurnTimer(30);
       this.message = "Cast your vote!";
       this.allowSelection = true;
       this.maxSelections = 1;
@@ -736,6 +767,25 @@ export default {
       document.getElementById("night").style.opacity = 0;
       await this.sleep(400);
       document.getElementById("night").style.display = "none"
+    },
+    startTurnTimer: function(seconds) {
+      var ms = seconds * 1000;
+      ms = ms - 2000; // Subtract 2 seconds from the total time since the checkTurnInterval takes 2 seconds itself
+      // Clear any previous countdown timers
+      clearInterval(this.turnCountdownInterval);
+      // Stop checking for next turn, wait X seconds then start checking turn every 2 seconds again
+      // This will make the player's turn last a total of X seconds client-side, regardless of what the server says
+      if (this.currentTurn != "Awake" && this.currentTurn != "Voting") {
+        clearInterval(this.checkTurnInterval);
+        setTimeout(() => {this.checkTurnInterval = setInterval(this.checkCurrentTurn, 2000)}, ms);
+      }
+      this.remainingTime = seconds;
+      this.turnCountdownInterval = setInterval(() => {
+        this.remainingTime--;
+        if (this.remainingTime < 0) {
+          clearInterval(this.turnCountdownInterval);
+        }
+      }, 1000);
     }
   }
 }
@@ -783,6 +833,11 @@ h1 {
 .msg {
   color: #884242;
   font-size: 20px;
+}
+
+.timer {
+  color: #ffffff;
+  font-size: 32px;
 }
 
 .selected {
