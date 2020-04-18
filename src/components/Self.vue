@@ -29,14 +29,6 @@ export default {
     image: function() {
       return roleLookup[this.role].token;
     }
-  },
-  methods: {
-    displayInfo: function() {
-      console.log("Mouse enter");
-    },
-    hideInfo: function() {
-      console.log("Mouse leave");
-    }
   }
 }
 </script>
