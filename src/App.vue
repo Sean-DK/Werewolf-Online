@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
+    <button class="home-btn" v-on:click="returnHome">🏠</button>
     <div class="bg-mute">
       Music<br>
       <button class="bg-mute-btn" v-on:click="toggleMusic">
@@ -51,6 +52,10 @@ export default {
     },
     toggleNarrator: function() {
       this.$store.commit("NarratorMute", !this.narrMuted);
+    },
+    returnHome: function() {
+      this.$router.push("/");
+      location.reload();
     }
   }
 }
@@ -68,6 +73,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #ffffff;
+}
+
+.home-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: none;
+  font-size: 48px;
+  width: 68px;
+  padding: 0px;
+  padding-bottom: 10px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.home-btn:hover {
+  background: #424242;
 }
 
 .bg-mute {

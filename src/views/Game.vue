@@ -30,7 +30,7 @@
     <br>
     <button v-if="allowSelection" v-on:click="submitAction" :disabled="selectedPlayers.length != maxSelections">Submit</button>
     <button v-if="isHost && currentTurn === 'Awake'" v-on:click="skipToVote">Skip to vote</button>
-    <button v-if="currentTurn === 'Results'" v-on:click="goHome">Main Menu</button>
+    <button v-if="currentTurn === 'Results' && isHost" v-on:click="nextTurn">Play Again</button>
     <br>
     <button v-if="allowSelection && currentTurn === 'Voting'" v-on:click="abstainFromVoting">Abstain</button>
   </div>
@@ -235,7 +235,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Minion wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 5000);
+                  setTimeout(this.nextTurn, 3000);
                 }
                 this.execMinion();
               }
@@ -255,7 +255,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Masons wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 5000);
+                  setTimeout(this.nextTurn, 3000);
                 }
                 this.execMason();
               }
@@ -275,7 +275,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Seer wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 180000);
+                  setTimeout(this.nextTurn, 10000);
                 }
                 this.execSeer();
               }
@@ -355,7 +355,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Insomniac wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 5000);
+                  setTimeout(this.nextTurn, 3000);
                 }
                 this.execInsomniac();
               }
@@ -386,6 +386,10 @@ export default {
               console.log("Displaying results");
               this.execResults();
               break;
+            case "Role Selection":
+              this.$store.commit("Reset");
+              this.$router.push("/roles");
+            break;
           }
         }
       });
@@ -647,6 +651,9 @@ export default {
       this.maxSelections = 0;
       this.selectMode = "Any";
       this.clearSelection();
+      // Hide voting countdown
+      clearTimeout(this.voteTurnTimeout);
+      this.remainingTime = -1;
       // Reveal roles
       this.axios.get("https://werewolf-functions.azurewebsites.net/api/FullResults?lobbyGuid=" + this.$store.state.Lobby.GUID)
       .then(response => {
@@ -756,7 +763,6 @@ export default {
       });
     },
     skipToVote: function() {
-      clearTimeout(this.voteTurnTimeout);
       this.nextTurn();
     },
     abstainFromVoting: function() {
@@ -773,11 +779,6 @@ export default {
       this.maxSelections = 0;
       this.selectMode = "Any";
       this.clearSelection();
-    },
-    goHome: function() {
-      this.$store.commit("PlayerWoke", false);
-      clearInterval(this.checkTurnInterval);
-      this.$router.push("/");
     },
     showBloodsplat: async function() {
       console.log("You died!");

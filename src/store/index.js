@@ -50,6 +50,10 @@ export default new Vuex.Store({
     },
     ActiveRoles(state, value) {
       state.ActiveRoles = value;
+    },
+    Reset(state) {
+      state.Player.Role = "none",
+      state.Player.wokeUp = false
     }
   },
   actions: {
