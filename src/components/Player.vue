@@ -2,11 +2,12 @@
   <div class="player">
     <h2>{{ name }}</h2>
     <img :src="image" />
+    <div class="highlight"></div>
   </div>
 </template>
 
 <script>
-import { imageLookup } from '@/data/roles.js'
+import { roleLookup } from '@/data/roles.js'
 
 export default {
   name: 'Player',
@@ -16,7 +17,7 @@ export default {
   },
   computed: {
     image: function() {
-      return imageLookup[this.role];
+      return roleLookup[this.role].image;
     }
   }
 }
@@ -31,6 +32,10 @@ export default {
   display: inline-block;
   margin: 5px;
   pointer-events: auto;
+}
+
+.player:hover {
+  background: #545454;
   cursor: pointer;
 }
 

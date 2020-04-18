@@ -119,6 +119,11 @@ img {
   filter: grayscale(1);
 }
 
+img:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
 .selected {
   opacity: 1;
   filter: grayscale(0);

@@ -1,9 +1,9 @@
 <template>
   <div class="game">
-    <div class="night" id="night"></div>
     <Self
       :role="selfRole"
     />
+    <div class="night" id="night"></div>
     <div class="player-container">
       <Player
         v-for="player in playersFiltered"
