@@ -132,6 +132,26 @@ export default {
   },
   methods: {
     select: function(player) {
+      // Seer logic
+      if (this.selfRole === "Seer" && this.currentTurn === "Seer") {
+        if (!player.name.includes("Extra")) {
+          Object.values(this.selectedPlayers).forEach(p => {
+            if (p.name.includes("Extra")) {
+              p.isSelected = false
+            }
+          });
+          this.maxSelections = 1;
+        }
+        else {
+          Object.values(this.selectedPlayers).forEach(p => {
+            if (!p.name.includes("Extra")) {
+              p.isSelected = false
+            }
+          });
+          this.maxSelections = 2;
+        }
+      }
+
       if (player.isSelected) { 
         player.isSelected = false; 
       }
@@ -141,30 +161,35 @@ export default {
             player.isSelected = !player.isSelected;
           break;
           case "Player":
-            if (player.name != "Extra 1" && player.name != "Extra 2" && player.name != "Extra 3") {
+            if (!player.name.includes("Extra")) {
               player.isSelected = !player.isSelected;
             }
           break;
           case "Extra":
-            if (player.name == "Extra 1" || player.name == "Extra 2" || player.name == "Extra 3") {
+            if (player.name.includes("Extra")) {
               player.isSelected = !player.isSelected;
             }
           break;
         }
       }
-
-      // Seer logic
-      if (this.selfRole === "Seer" && this.currentTurn === "Seer") {
-        // If there are no selections, set max to 1 and type to Any
-        if (this.selectedPlayers.length == 0) {
-          this.maxSelections = 1;
-          this.selectMode = "Any";
-        }
-        // If the currently selected player is an Extra then
-        // set max selections to 2 and mode to Extra
-        if (this.selectedPlayers.length == 1 && this.selectedPlayers[0].name.includes("Extra")) {
-          this.maxSelections = 2;
-          this.selectMode = "Extra";
+      else if (this.allowSelection && this.selectedPlayers.length == this.maxSelections) {
+        switch(this.selectMode) {
+          case "Any":
+            this.selectedPlayers[0].isSelected = false;
+            player.isSelected = !player.isSelected;
+          break;
+          case "Player":
+            if (!player.name.includes("Extra")) {
+              this.selectedPlayers[0].isSelected = false;
+              player.isSelected = !player.isSelected;
+            }
+          break;
+          case "Extra":
+            if (player.name.includes("Extra")) {
+              this.selectedPlayers[0].isSelected = false;
+              player.isSelected = !player.isSelected;
+            }
+          break;
         }
       }
     },
@@ -250,7 +275,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Seer wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 10000);
+                  setTimeout(this.nextTurn, 180000);
                 }
                 this.execSeer();
               }
