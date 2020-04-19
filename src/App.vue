@@ -166,7 +166,7 @@ body {
   padding: 0px;
   padding-bottom: 10px;
   background: inherit;
-  border-radius: 50%;
+  border-radius: 20px;
 }
 
 .home-btn:hover {

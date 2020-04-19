@@ -397,6 +397,7 @@ export default {
               this.execResults();
               break;
             case "Role Selection":
+              clearInterval(this.checkTurnInterval);
               this.$store.commit("Reset");
               this.$router.push("/roles");
             break;
