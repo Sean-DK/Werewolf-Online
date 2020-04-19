@@ -245,7 +245,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Minion wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 3000);
+                  setTimeout(this.nextTurn, 5000);
                 }
                 this.execMinion();
               }
@@ -265,7 +265,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Masons wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 3000);
+                  setTimeout(this.nextTurn, 5000);
                 }
                 this.execMason();
               }
@@ -365,7 +365,7 @@ export default {
                 // If role is active, execute turn script
                 console.log("Insomniac wake up...");
                 if (this.isHost) {
-                  setTimeout(this.nextTurn, 3000);
+                  setTimeout(this.nextTurn, 5000);
                 }
                 this.execInsomniac();
               }
