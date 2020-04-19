@@ -104,6 +104,47 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-device-width : 719px) {
+.img-container {
+  width: 90%;
+  margin: auto;
+  margin-top: 15%;
+}
+
+img {
+  width: 20%;
+  margin-right: 5px;
+  border: 2px solid #212121;
+  border-radius: 10px;
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+img:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.selected {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+button {
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border: none;
+  background: #646464;
+}
+
+span {
+  color: #884242;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 .img-container {
   width: 800px;
   margin: auto;
@@ -140,5 +181,6 @@ button {
 
 span {
   color: #884242;
+}
 }
 </style>

@@ -79,6 +79,39 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-device-width : 719px) {
+.join {
+  transition: opacity 1s ease-in;
+  opacity: 0;
+}
+
+#nickname {
+  margin-top: 50%;
+}
+
+h2 {
+  margin-bottom: 5px;
+}
+
+input {
+  border: none;
+  height: 32px;
+  width: 160px;
+  text-align: center;
+  font-size: 20px;
+  background: #646464;
+}
+
+button {
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 20px;
+  border: none;
+  background: #646464;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 .join {
   transition: opacity 1s ease-in;
   opacity: 0;
@@ -107,5 +140,6 @@ button {
   font-size: 20px;
   border: none;
   background: #646464;
+}
 }
 </style>

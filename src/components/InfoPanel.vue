@@ -37,6 +37,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@media only screen and (max-device-width : 719px) {
+.info {
+  border: 2px solid #101010;
+  background: #212121;
+  border-radius: 10px;
+  z-index: 2;
+  position: absolute;
+  width: 100%;
+  margin-top: 5px;
+}
+
+h3 {
+  text-align: left;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 .info {
   border: 2px solid #101010;
   background: #212121;
@@ -50,5 +69,6 @@ h3 {
   text-align: left;
   margin-left: 20px;
   margin-right: 20px;
+}
 }
 </style>

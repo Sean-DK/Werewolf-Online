@@ -62,6 +62,87 @@ export default {
 </script>
 
 <style>
+@media only screen and (max-device-width : 719px) {
+body {
+  background: #303030;
+  margin: 0;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #ffffff;
+}
+
+.home-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: none;
+  font-size: 24px;
+  width: 24px;
+  padding: 0px;
+  padding-bottom: 10px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.home-btn:active {
+  background: #424242;
+}
+
+.bg-mute {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  border-radius: 10px;
+  font-size: 8px;
+  z-index: 2;
+}
+
+.bg-mute-btn {
+  border: none;
+  font-size: 24px;
+  width: 24px;
+  padding: 0px;
+  padding-bottom: 5px;
+  background: inherit;
+  border-radius: 50%;
+  text-align: left;
+}
+
+.bg-mute:active {
+  background: #424242;
+}
+
+.narr-mute {
+  position: absolute;
+  left: 50px;
+  bottom: 10px;
+  border-radius: 10px;
+  font-size: 8px;
+  z-index: 2;
+}
+
+.narr-mute-btn {
+  border: none;
+  font-size: 24px;
+  width: 26px;
+  padding: 0px;
+  padding-bottom: 5px;
+  background: inherit;
+  border-radius: 50%;
+  text-align: left;
+}
+
+.narr-mute:active {
+  background: #424242;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 body {
   background: #303030;
   margin: 0;
@@ -136,5 +217,6 @@ body {
 
 .narr-mute:hover {
   background: #424242;
+}
 }
 </style>

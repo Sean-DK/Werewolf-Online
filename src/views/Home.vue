@@ -44,6 +44,30 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-device-width : 719px) {
+.home {
+  user-select: none;
+}
+
+h1 {
+  margin-top: 40%;
+  font-size: 48px;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+h2 {
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.7s ease-in-out;
+}
+
+h2:active {
+  background: #424242;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 .home {
   user-select: none;
 }
@@ -63,5 +87,6 @@ h2 {
 
 h2:hover {
   background: #424242;
+}
 }
 </style>

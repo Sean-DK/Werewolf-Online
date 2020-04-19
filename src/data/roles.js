@@ -135,7 +135,7 @@ const roleLookup = {
     "image": require("@/assets/Roles/Seer.png"),
     "token": require("@/assets/Tokens/token_Seer.png"),
     "header": "Team: Villagers",
-    "description": "At night, you may look at either one player's card or two of the Extra cards."
+    "description": "At night, you may look at one player's card or two of the Extra cards."
   },
   "Tanner": {
     "image": require("@/assets/Roles/Tanner.png"),

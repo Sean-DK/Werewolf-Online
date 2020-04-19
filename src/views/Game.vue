@@ -205,6 +205,16 @@ export default {
           // Do nothing until the turn changes
         }
         else {
+          // Drunk auto-trade logic
+          // If the following statements are true, then that means we are the drunk but did NOT submit a selection
+          if (this.currentTurn === "Drunk" && this.selfRole === "Drunk" && this.allowSelection) {
+            // Deselect all playeres
+            Object.values(this.selectedPlayers).forEach(player => { player.isSelected = false; });
+            // Select Extra 1 and submitAaction for the Drunk
+            this.extras[0].isSelected = true;
+            this.submitAction();
+            console.log("Auto Drunk");
+          }
           this.currentTurn = response.data.currentTurn;
           switch (this.currentTurn)
           {
@@ -763,6 +773,7 @@ export default {
       });
     },
     skipToVote: function() {
+      clearTimeout(this.voteTurnTimeout);
       this.nextTurn();
     },
     abstainFromVoting: function() {
@@ -818,6 +829,76 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-device-width : 719px) {
+.game {
+  user-select: none;
+}
+
+.player-container {
+  position: relative;
+  display: inline-block;
+  width: 90%;
+  margin: auto;
+  pointer-events: none;
+}
+
+.extras-container {
+  position: relative;
+  display: inline-block;
+  width: 90%;
+  margin: auto;
+  pointer-events: none;
+}
+
+h1 {
+  margin-top: 10%;
+  font-size: 72px;
+}
+
+.night {
+  top: 0;
+  position: absolute;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 2s ease;
+}
+
+.msg {
+  width: 60%;
+  margin: auto;
+  color: #884242;
+  font-size: 12px;
+}
+
+.timer {
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.selected {
+  outline: 3px solid #ffff88;
+  outline-offset: -3px;
+}
+
+.dead {
+  outline: 3px solid #884242 !important;
+  outline-offset: -3px;
+}
+
+button {
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 20px;
+  border: none;
+  background: #646464;
+}
+}
+
+@media only screen and (min-device-width : 720px) {
 .game {
   user-select: none;
 }
@@ -882,5 +963,6 @@ button {
   font-size: 20px;
   border: none;
   background: #646464;
+}
 }
 </style>
