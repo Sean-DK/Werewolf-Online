@@ -220,7 +220,9 @@ export default {
           {
             case "Werewolf":
               // Check if role is active
-              var active = Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "werewolf1";})[0].selected;
+              var active = Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "werewolf1";})[0].selected ||
+                           Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "werewolf2";})[0].selected ||
+                           Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "mysticwolf";})[0].selected;
               if (active) {
                 // If role is active, execute turn script
                 console.log("Werewolves wake up...");
@@ -280,7 +282,8 @@ export default {
             break;
             case "Seer":
               // Check if role is active
-              active = Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "seer";})[0].selected;
+              active = Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "seer";})[0].selected ||
+                       Object.values(this.$store.state.ActiveRoles).filter(role => { return role.id === "mysticwolf";})[0].selected;
               if (active) {
                 // If role is active, execute turn script
                 console.log("Seer wake up...");
@@ -422,8 +425,12 @@ export default {
         this.narratorAudio = new Audio(require("@/assets/Audio/werewolf.mp3"));
         this.narratorAudio.play();
       }
-      if (this.selfRole === "Werewolf" && !this.hasAwoken) {
+      if ((this.selfRole === "Werewolf" || this.selfRole === "Mystic Wolf") && !this.hasAwoken) {
         this.wakeUp();
+        // If we are the Mystic Wolf, set hasAwoken to false so that we can wake up with the Seer
+        if (this.selfRole === "Mystic Wolf") {
+          this.$store.commit("PlayerWoke", false);
+        }
         await this.sleep(2000);
         this.startTurnTimer(10);
         // Check for other werewolves
@@ -437,7 +444,8 @@ export default {
         })
 
         // If there are none, pick a card from the extra pile
-        if (count == 0) {
+        // The Mystic Wolf does not benefit from the Lone Wolf perk
+        if (count == 0 && this.selfRole != "Mystic Wolf") {
           this.message = "You are a lone wolf. You may view a card from the Extras pile.";
           this.allowSelection = true;
           this.maxSelections = 1;
@@ -516,6 +524,18 @@ export default {
         this.allowSelection = true;
         this.maxSelections = 1;
         this.selectMode = "Any";
+        // submitAction
+      }
+      else if (this.selfRole === "Mystic Wolf" && !this.hasAwoken) {
+        this.message = "Select 1 player and view their card";
+        this.wakeUp();
+        // Give the seer 12 seconds since 2 seconds will be taken up by the wakeUp() animation
+        this.startTurnTimer(12);
+        // Pick a card
+        // Additional logic in this.select() for allowing a Seer to view 2 Extra cards
+        this.allowSelection = true;
+        this.maxSelections = 1;
+        this.selectMode = "Player";
         // submitAction
       }
       else {
@@ -694,6 +714,7 @@ export default {
       switch(this.currentTurn) {
         case "Werewolf":
         case "Seer":
+        case "Mystic Wolf":
           this.axios.post("https://werewolf-functions.azurewebsites.net/api/PeekRole", {
             players: this.selectedPlayers,
             lobbyGuid: this.$store.state.Lobby.GUID})

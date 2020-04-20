@@ -36,6 +36,18 @@ const roles = [
     selected: false
   },
   {
+    id: "mysticwolf",
+    name: "Mystic Wolf",
+    src: require("@/assets/Roles/MysticWolf.png"),
+    selected: false
+  },
+  {
+    id: "revealer",
+    name: "Revealer",
+    src: require("@/assets/Roles/Revealer.png"),
+    selected: false
+  },
+  {
     id: "robber",
     name: "Robber",
     src: require("@/assets/Roles/Robber.png"),
@@ -89,6 +101,12 @@ const roles = [
     src: require("@/assets/Roles/Werewolf.png"),
     selected: true
   },
+  {
+    id: "witch",
+    name: "Witch",
+    src: require("@/assets/Roles/Witch.png"),
+    selected: false
+  }
 ]
 
 const roleLookup = {
@@ -124,6 +142,18 @@ const roleLookup = {
     "token": require("@/assets/Tokens/token_Minion.png"),
     "header": "Team: Werewolves",
     "description": "At night, you wake up and look for Werewolves. If you die and no Werewolves die, then the Werewolves (and you) win. If there are no Werewolves, then at least one other player must die in order for you to win."
+  },
+  "Mystic Wolf": {
+    "image": require("@/assets/Roles/MysticWolf.png"),
+    "token": require("@/assets/Tokens/token_MysticWolf.png"),
+    "header": "Team: Werewolves",
+    "description": "At night, you wake up and look for other Werewolves. You will wake again as the Seer and you may look at one player's card.",
+  },
+  "Revealer": {
+    "image": require("@/assets/Roles/Revealer.png"),
+    "token": require("@/assets/Tokens/token_Revealer.png"),
+    "header": "Team: Villagers",
+    "description": "At night, you may reveal one player's card. Their card will remain revealed if it is not a Werewolf or Tanner."
   },
   "Robber": {
     "image": require("@/assets/Roles/Robber.png"),
@@ -166,6 +196,12 @@ const roleLookup = {
     "header": "Team: Werewolves",
     "description": "At night, you wake up and look for other Werewolves. If there are no other Werewolves, you may look at one of the Extra cards."
   },
+  "Witch": {
+    "image": require("@/assets/Roles/Witch.png"),
+    "token": require("@/assets/Tokens/token_Witch.png"),
+    "header": "Team: Villagers",
+    "description": "At night, you may exchange one player's card with one of the Extra cards."
+  }
 }
 
 export { roles, roleLookup }

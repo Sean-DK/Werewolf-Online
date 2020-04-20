@@ -146,7 +146,7 @@ span {
 
 @media only screen and (min-device-width : 720px) {
 .img-container {
-  width: 800px;
+  width: 1000px;
   margin: auto;
   margin-top: 5%;
 }
